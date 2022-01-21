@@ -1,0 +1,35 @@
+version: "3"
+services:
+  api-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: api-ionix/express:1.0.0
+    ports:
+      - "4500:3000"
+    volumes:
+      - "./:/app"
+    environment:
+      DEV_DB_USERNAME: kenshimota
+      DEV_DB_PASSWORD: manager
+      DEV_DB_NAME: api-ionix
+      DEV_DB_HOSTNAME: mysql-server
+      CI_DB_USERNAME: kenshimota
+      CI_DB_PASSWORD: manager
+      CI_DB_NAME: api-ionix
+      CI_DB_HOSTNAME: mysql-server
+      PROD_DB_USERNAME: kenshimota
+      PROD_DB_PASSWORD: manager
+      PROD_DB_NAME: api-ionix
+      PROD_DB_HOSTNAME: mysql-server
+    links:
+      - mysql-server
+  mysql-server:
+    image: mysql/mysql-server:5.7.26
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: api-ionix
+      MYSQL_USER: kenshimota
+      MYSQL_PASSWORD: manager
+      MYSQL_ROOT_PASSWORD: manager
