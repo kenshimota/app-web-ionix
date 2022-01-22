@@ -11,6 +11,8 @@ import PaginateTable from "./PaginationTable";
 import ToolbarTable from "./ToolbarTable";
 import DialogNewEditUser from "./DialogNewEditUsers";
 import DialogSearchUsers from "./DialogSearch";
+import Alert from "../contexts/Alert";
+import AlertConstants from "../constants/AlertContants";
 
 const styles = {
   searchDiv: { margin: "10px auto", width: "fit-content" },
@@ -24,6 +26,7 @@ const UsersTable = function () {
   const [loading, setLoading] = React.useState(false);
   const [params, setParams] = React.useState({});
   const auth = React.useContext(Auth);
+  const alert = React.useContext(Alert);
   const pageSize = 10;
 
   const handleGetUsers = async function () {
@@ -36,22 +39,19 @@ const UsersTable = function () {
       }
 
       const response = await requestAxios.get(url);
+
+      const list = response.data.map((user) => ({
+        ...user,
+        createdAt: new Date(user.createdAt),
+        updatedAt: new Date(user.updatedAt),
+      }));
+
+      setUsers(list);
       setLoading(false);
-
-      if (response.status === 200) {
-        const list = response.data.map((user) => ({
-          ...user,
-          createdAt: new Date(user.createdAt),
-          updatedAt: new Date(user.updatedAt),
-        }));
-
-        setUsers(list);
-      } else
-        throw new Error(
-          "Ha ocurrido un error inesperado, verifique su conexión a internet"
-        );
     } catch (error) {
-      throw new Error(error);
+      alert.dispatch({ type: AlertConstants.failed, message: error.message });
+    } finally {
+      setLoading(false);
     }
   };
 
