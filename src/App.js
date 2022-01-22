@@ -1,21 +1,22 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "semantic-ui-css/semantic.min.css";
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+import RoutesApp from "./routes";
+import AuthProvider from "./providers/auth-provider";
+import NavBar from "./components/NavBar";
+import AlertProvider from "./providers/alert-providers";
+
+const App = function (props) {
+  return (
+    <AuthProvider>
+      <AlertProvider>
+        <NavBar></NavBar>
+        <div style={{ marginTop: 80, marginBottom: 80 }}>
+          <RoutesApp></RoutesApp>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+      </AlertProvider>
+    </AuthProvider>
+  );
+};
 
 export default App;
